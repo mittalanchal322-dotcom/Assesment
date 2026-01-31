@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2 class="mb-4">HRMS Dashboard</h2>
+
+<div class="row g-4">
+
+  <div class="col-md-4">
+    <div class="card shadow text-center p-4">
+      <h5>Employees</h5>
+      <p>Manage employee details</p>
+      <a href="{% url 'employees:employee_list' %}" class="btn btn-primary">
+        Go to Employees
+      </a>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card shadow text-center p-4">
+      <h5>Attendance</h5>
+      <p>Mark daily attendance</p>
+      <a href="{% url 'attendance:mark_attendance' %}" class="btn btn-success">
+        Mark Attendance
+      </a>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card shadow text-center p-4">
+      <h5>Reports</h5>
+      <p>View attendance charts</p>
+      <a href="{% url 'attendance:attendance_chart' %}" class="btn btn-warning">
+        View Charts
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<!-- cards for summary -->
+
+<div class="row mb-4">
+
+    <!-- TOTAL EMPLOYEES CARD -->
+   <div class="row mt-5">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Total Employees</div>
+                <div class="card-body">
+                    <h3 class="card-title">{{ total_employees }}</h3>
+                </div>
+            </div>
+        </div>
+
+    <!-- ATTENDANCE OVERVIEW CHART -->
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6 class="text-muted mb-3">Attendance Overview</h6>
+
+                {{ attendance_labels|json_script:"attendance-labels" }}
+                {{ attendance_data|json_script:"attendance-data" }}
+
+                <div class="chart-container">
+                    <canvas id="attendancePieChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+const labels = JSON.parse(
+    document.getElementById('attendance-labels').textContent
+);
+const data = JSON.parse(
+    document.getElementById('attendance-data').textContent
+);
+
+const ctx = document.getElementById('attendancePieChart');
+
+new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: labels,
+        datasets: [{
+            data: data,
+            backgroundColor: ['#36A2EB', '#FF6384']
+        }]
+    },
+   options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '65%',
+    plugins: {
+        legend: {
+            position: 'bottom'
+        },
+        title: {
+            display: true,
+            text: 'Attendance Overview'
+        }
+    }
+}
+});
+</script>
+
+{% endblock %}

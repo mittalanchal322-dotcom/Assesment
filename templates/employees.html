@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Add Employee</h2>
+<form method="POST" class="row g-3 mb-4">
+    {% csrf_token %}
+    <input class="form-control" name="employee_id" placeholder="Employee ID" required>
+    <input class="form-control" name="full_name" placeholder="Full Name" required>
+    <input class="form-control" name="email" placeholder="Email" required>
+    <input class="form-control" name="department" placeholder="Department" required>
+    <button class="btn btn-primary mt-4">Add Employee</button>
+</form>
+
+<h3>Employee List</h3>
+<br>
+{% if employees %}
+<table class="table table-striped">
+    <tr>
+        <th>ID</th><th>Name</th><th>Email</th><th>Dept</th><th>Action</th>
+    </tr>
+    {% for emp in employees %}
+    <tr>
+        <td>{{ emp.employee_id }}</td>
+        <td>{{ emp.full_name }}</td>
+        <td>{{ emp.email }}</td>
+        <td>{{ emp.department }}</td>
+        <td>
+            <a href="/employees/delete/{{ emp.employee_id }}/" class="btn btn-danger btn-sm">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p class="text-muted">No employees found.</p>
+{% endif %}
+
+<!-- Employee Attendance: -->
+<br>
+<h3>Employee Attendance</h3>
+<hr>
+<br>
+<table class="table table-bordered table-dark">
+    <thead>
+        <tr>
+            <th>Employee ID</th>
+            <th>Name</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for emp in employees %}
+        <tr>
+            <td>{{ emp.employee_id }}</td>
+            <td>{{ emp.full_name }}</td>
+            <td>
+                <a href="{% url 'attendance:employee_attendance' emp.employee_id %}"
+                   class="btn btn-sm btn-primary">
+                    View Attendance
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

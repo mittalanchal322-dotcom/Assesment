@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h3>Attendance Overview</h3>
+
+{{ labels|json_script:"labels-data" }}
+{{ data|json_script:"chart-data" }}
+
+<canvas id="attendanceChart"></canvas>
+
+<script>
+const chartLabels = JSON.parse(
+    document.getElementById('labels-data').textContent
+);
+
+const chartData = JSON.parse(
+    document.getElementById('chart-data').textContent
+);
+
+new Chart(document.getElementById('attendanceChart'), {
+    type: 'bar',
+    data: {
+        labels: chartLabels,
+        datasets: [{
+            label: 'Attendance Count',
+            data: chartData,
+        }]
+    }
+});
+</script>
+
+{% endblock %}

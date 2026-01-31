@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h4 class="mb-3">
+    Attendance Records – {{ employee.full_name }} ({{ employee.employee_id }})
+</h4>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in records %}
+        <tr>
+            <td>{{ record.date }}</td>
+            <td>
+                {% if record.status == "Present" %}
+                    <span class="badge bg-success">Present</span>
+                {% else %}
+                    <span class="badge bg-danger">Absent</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2" class="text-center text-muted">
+                No attendance records found
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{% url 'employees:employee_list' %}" class="btn btn-secondary">
+    Back to Employees
+</a>
+
+{% endblock %}
